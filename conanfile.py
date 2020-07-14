@@ -12,7 +12,7 @@ class CsuConan(ConanFile):
     settings = 'os', 'compiler', 'build_type', 'arch'
     url = 'https://opensource.apple.com/'
     license = 'https://opensource.apple.com/source/Csu/Csu-%s/crt.c.auto.html' % csu_version
-    description = 'C runtime helpers'
+    description = 'C runtime stubs'
     source_dir = 'Csu-%s' % csu_version
 
     def source(self):
@@ -35,8 +35,8 @@ class CsuConan(ConanFile):
                 'CXX': self.deps_cpp_info['llvm'].rootpath + '/bin/clang++',
             }
             with tools.environment_append(env_vars):
-                self.run('make crt1.v2.o')
-            shutil.move('crt1.v2.o', 'crt1.o')
+                self.run('make crt1.v4.o')
+            shutil.move('crt1.v4.o', 'crt1.o')
 
     def package(self):
         self.copy('crt1.o', src=self.source_dir, dst='lib')
