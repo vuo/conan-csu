@@ -5,7 +5,7 @@ class CsuConan(ConanFile):
     name = 'csu'
 
     csu_version = '85'
-    package_version = '0'
+    package_version = '1'
     version = '%s-%s' % (csu_version, package_version)
 
     build_requires = 'llvm/3.3-7@vuo/stable'
