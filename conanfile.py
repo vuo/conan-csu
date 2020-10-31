@@ -4,11 +4,14 @@ import shutil
 class CsuConan(ConanFile):
     name = 'csu'
 
-    csu_version = '85'
-    package_version = '1'
+    csu_version = '88'
+    package_version = '0'
     version = '%s-%s' % (csu_version, package_version)
 
-    build_requires = 'llvm/3.3-7@vuo/stable'
+    build_requires = (
+        'llvm/5.0.2-1@vuo/stable',
+        'macos-sdk/11.0-0@vuo/stable',
+    )
     settings = 'os', 'compiler', 'build_type', 'arch'
     url = 'https://opensource.apple.com/'
     license = 'https://opensource.apple.com/source/Csu/Csu-%s/crt.c.auto.html' % csu_version
@@ -17,7 +20,7 @@ class CsuConan(ConanFile):
 
     def source(self):
         tools.get('http://www.opensource.apple.com/tarballs/Csu/Csu-%s.tar.gz' % self.csu_version,
-                  sha256='f2291d7548da854322acf194a875609bfae96c2481738cf6fd1d89eea9ae057a')
+                  sha256='b9bda91165d6c05c40fadbb622e70ace876c9a339d5101cd002644203d7b3409')
 
         with tools.chdir(self.source_dir):
             tools.replace_in_file('start.s',
@@ -33,6 +36,7 @@ class CsuConan(ConanFile):
             env_vars = {
                 'CC' : self.deps_cpp_info['llvm'].rootpath + '/bin/clang',
                 'CXX': self.deps_cpp_info['llvm'].rootpath + '/bin/clang++',
+                'RC_ARCHS': 'x86_64 arm64'
             }
             with tools.environment_append(env_vars):
                 self.run('make crt1.v4.o')
